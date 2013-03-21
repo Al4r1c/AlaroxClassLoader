@@ -1,4 +1,6 @@
-AlaroxClassLoader V1.0
+AlaroxClassLoader
 =================
+
+V1.0
 
 Simple ClassLoader.
