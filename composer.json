@@ -1,0 +1,21 @@
+{
+	"name": "alarox/AlaroxClassLoader",
+	"description": "description_text",
+	"type": "library",
+	"homepage": "https://github.com/Al4r1c/AlaroxClassLoader/",
+	"authors": [
+		{
+			"name": "KURDIJAKA Y.",
+			"email": "yann.kurdijaka@wanadoo.fr"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"mikey179/vfsStream": "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"ClassLoader": "src/"
+		}
+	}
+}
