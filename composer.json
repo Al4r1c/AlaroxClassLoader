@@ -14,8 +14,6 @@
 		"mikey179/vfsStream": "dev-master"
 	},
 	"autoload": {
-		"psr-0": {
-			"ClassLoader": "src/classloader/"
-		}
+		"files": [ "src/classloader/spyc.php" ]
 	}
 }
