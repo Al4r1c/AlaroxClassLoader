@@ -82,7 +82,7 @@ class ClassLoader
             ) {
                 $this->_cacheMapping[$className] = true;
 
-                include_once($fileName);
+                require_once($fileName);
 
                 return true;
             }
