@@ -8,16 +8,23 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
     /** @var ClassLoader */
     private $_classLoader;
 
-    protected function setup()
+    protected function setUp()
     {
         $this->_classLoader = new ClassLoader();
+    }
+
+    public function testExtension()
+    {
+        $this->_classLoader->setExtension('.class.php');
+
+        $this->assertAttributeEquals('.class.php', '_extension', $this->_classLoader);
     }
 
     public function testAjouterNamespace()
     {
         $this->_classLoader->ajouterNamespace('myNamespace', '/path/');
         $this->assertAttributeEquals(
-            array('mynamespace' => array('path' => '/path/', 'extension' => '.class.php')), '_namespaces',
+            array('mynamespace' => array('path' => '/path/', 'extension' => '.php')), '_namespaces',
             $this->_classLoader
         );
     }
@@ -36,11 +43,25 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         vfsStreamWrapper::setRoot(new \org\bovigo\vfs\vfsStreamDirectory('realPath'));
 
         mkdir(vfsStream::url('realPath') . '/folder');
-        file_put_contents(vfsStream::url('realPath/folder') . '/Factice.class.php', '');
+        file_put_contents(vfsStream::url('realPath/folder') . '/Factice.php', '');
 
         $this->_classLoader->ajouterNamespace('MyNamespace', vfsStream::url('realPath/folder'));
 
         $this->assertTrue($this->_classLoader->loaderFunction('MyNamespace\Factice'));
+    }
+
+    public function testLoaderFunctionCache()
+    {
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new \org\bovigo\vfs\vfsStreamDirectory('realPath'));
+
+        mkdir(vfsStream::url('realPath') . '/folder');
+        file_put_contents(vfsStream::url('realPath/folder') . '/Factice.php', '');
+
+        $this->_classLoader->ajouterNamespace('MyNamespace', vfsStream::url('realPath/folder'));
+
+        $this->_classLoader->loaderFunction('MyNamespace\Factice');
+        $this->assertFalse($this->_classLoader->loaderFunction('MyNamespace\Factice'));
     }
 
     public function testLoaderFunctionNonTrouve()

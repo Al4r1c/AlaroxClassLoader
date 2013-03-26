@@ -12,27 +12,49 @@ class ClassLoader
     private $_cacheMapping = array();
 
     /**
+     * @var string
+     */
+    private $_extension;
+
+    /**
+     * @param string $extension
+     */
+    public function __construct($extension = '.php')
+    {
+        $this->setExtension($extension);
+    }
+
+    /**
+     * @param string $extension
+     */
+    public function setExtension($extension)
+    {
+        $this->_extension = $this->rajouterPointExtensionSiNonPresent($extension);
+    }
+
+    private function rajouterPointExtensionSiNonPresent($extension)
+    {
+        if (strncmp($extension, '.', strlen('.'))) {
+            $extension = '.' . $extension;
+        }
+
+        return $extension;
+    }
+
+    /**
      * @param string $namespace
      * @param string $includePath
      * @param string $extension
      */
-    public function ajouterNamespace($namespace, $includePath, $extension = '.class.php')
+    public function ajouterNamespace($namespace, $includePath, $extension = null)
     {
-        if (!$this->startsWith($extension, '.')) {
-            $extension = '.' . $extension;
+        if (is_null($extension)) {
+            $extension = $this->_extension;
+        } else {
+            $extension = $this->rajouterPointExtensionSiNonPresent($extension);
         }
 
         $this->_namespaces[strtolower($namespace)] = array('path' => $includePath, 'extension' => $extension);
-    }
-
-    /**
-     * @param string $string
-     * @param string $stringRecherche
-     * @return bool
-     */
-    public function startsWith($string, $stringRecherche)
-    {
-        return !strncmp($string, $stringRecherche, strlen($stringRecherche));
     }
 
     /**
