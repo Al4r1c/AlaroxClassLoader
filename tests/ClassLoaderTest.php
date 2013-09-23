@@ -119,4 +119,18 @@ class ClassLoaderTest extends \PHPUnit_Framework_TestCase
         $this->_classLoader->loaderFunction('MyNamespace\Factice');
         $this->assertFalse($this->_classLoader->loaderFunction('MyNamespace\Factice'));
     }
+
+    public function testDifferentOs() {
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new \org\bovigo\vfs\vfsStreamDirectory('realPath'));
+
+        mkdir(vfsStream::url('realPath') . '/folder');
+        mkdir(vfsStream::url('realPath/folder') . '/Deeper');
+        file_put_contents(vfsStream::url('realPath/folder/Deeper') . '/Factice.php', '');
+
+        $this->_classLoader->ajouterNamespace('MyNamespace', vfsStream::url('realPath/folder'));
+
+        $this->_classLoader->loaderFunction('MyNamespace\Deeper\Factice');
+        $this->assertFalse($this->_classLoader->loaderFunction('MyNamespace\Factice'));
+    }
 }

@@ -91,16 +91,18 @@ class ClassLoader
      */
     public function loaderFunction($className)
     {
+        $className = str_replace('\\', DIRECTORY_SEPARATOR, $className);
+
         if (array_key_exists($className, $this->_cacheMapping)) {
             return false;
         }
 
         foreach ($this->_namespaces as $unNamespace => $configNamespace) {
             if (!empty($unNamespace) && substr_count(strtolower($className), $unNamespace) > 0 && file_exists(
-                $fileName = $configNamespace['path'] . DIRECTORY_SEPARATOR .
-                    substr($className, strpos($unNamespace, $className) + strlen($unNamespace) + 1) .
-                    $configNamespace['extension']
-            )
+                    $fileName = $configNamespace['path'] . DIRECTORY_SEPARATOR .
+                        substr($className, strpos($unNamespace, $className) + strlen($unNamespace) + 1) .
+                        $configNamespace['extension']
+                )
             ) {
                 $this->_cacheMapping[$className] = true;
 
